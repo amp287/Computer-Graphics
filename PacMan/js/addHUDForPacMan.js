@@ -7,17 +7,20 @@
 	
 	var rw = 200, rh = 150;
 	var ca = 100, ar = 2;
+
+    Physijs.scripts.worker = 'libs/physijs_worker.js';
+    Physijs.scripts.ammo = 'ammo.js';
+
+
+function errorCallback() {
+    console.log("There was an error");
+
+}
 	
 	function init()
-	{
-        document.body.requestPointerLock = document.body.requestPointerLock || document.body.mozRequestPointerLock || document.body.webkitRequestPointerLock;
-        document.body.requestPointerLock();
-        
-        if(document.pointerLockElement == document.body){
-            console.log("should be locked");
-        }
-        
-		scene = new THREE.Scene();
+	{   
+		scene = new Physijs.Scene();
+		scene.setGravity(new THREE.Vector3( 0, 0, -30 ));
 
 		setupRenderers();
 		setupCameras();
@@ -29,14 +32,50 @@
 		
 		setupPlayer();
         
-        addObjectsToScene();
+        generateMap();
+        
+        //addObjectsToScene();
 
 		// Main code here.
 		
 		// Output to the stream
+        
+        var check_pointerLock = 'pointerLockElement' in document ||
+                                'mozPointerLockElement' in document ||
+                                'webkitPointerLockElement' in document;
+        var element = document.body;
+        
+        if(check_pointerLock){
+            console.log("Pointer lock exists");
+            //canvas element to lock pointer to
+            element.requestPointerLock = element.requestPointerLock ||
+                                        element.mozRequestPointerLock ||
+                                        element.webkitRequestPointerLock;
+           // element.requestPointerLock();
+
+            //check for errors
+            document.addEventListener('pointerlockerror', errorCallback, false);
+            document.addEventListener('mozpointerlockerror', errorCallback, false);
+            document.addEventListener('webkitpointerlockerror', errorCallback, false);
+
+            // 1) Used as a boolean check: are we pointer locked?
+            if (!!document.pointerLockElement) {
+              console.log("locked");
+            } else {
+              // pointer is not locked
+              console.log("not locked");
+            }
+        }
 	
 		var container = document.getElementById("MainView");
 		container.appendChild( renderer.domElement );
+        
+        //container.requestPointerLock = container.requestPointerLock ||container.mozRequestPointerLock || container.webkitRequestPointerLock;
+        //container.requestPointerLock();
+        
+        /*if(document.pointerLockElement == container){
+            console.log("should be locked");
+        }*/
         
 		// HUD
 		var containerHUD = document.getElementById("HUDView");
@@ -51,12 +90,17 @@
 		// Call render
 		render();
 	}
+
+    document.body.onclick = function(){
+        document.body.requestPointerLock();
+    }
 	
 	function setupPlayer()
 	{
 		var ballGeometry = new THREE.SphereGeometry( 3 );
 		var ballMaterial = new THREE.MeshLambertMaterial({color:'white'});
 		player = new THREE.Mesh( ballGeometry, ballMaterial );
+        player.position.set(0, 0, 50);
 		scene.add( player );
 	}
 	
@@ -78,6 +122,7 @@
 	{
 		camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
 		camera.lookAt( scene.position );
+        camera.position.set(0, 0, 50);
 
 		// HUD
 		cameraHUD = new THREE.PerspectiveCamera(ca,ar,0.1,4000);
