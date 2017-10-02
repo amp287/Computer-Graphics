@@ -10,6 +10,13 @@
 	
 	function init()
 	{
+        document.body.requestPointerLock = document.body.requestPointerLock || document.body.mozRequestPointerLock || document.body.webkitRequestPointerLock;
+        document.body.requestPointerLock();
+        
+        if(document.pointerLockElement == document.body){
+            console.log("should be locked");
+        }
+        
 		scene = new THREE.Scene();
 
 		setupRenderers();
@@ -30,7 +37,7 @@
 	
 		var container = document.getElementById("MainView");
 		container.appendChild( renderer.domElement );
-
+        
 		// HUD
 		var containerHUD = document.getElementById("HUDView");
 		containerHUD.appendChild( rendererHUD.domElement );
@@ -38,8 +45,8 @@
         controls = new THREE.PointerLockControls(camera);
         controls.enabled = true;
         scene.add(controls.getObject());
-		
-       
+        
+
         
 		// Call render
 		render();
