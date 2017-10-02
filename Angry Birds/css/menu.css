@@ -1,0 +1,76 @@
+.menu{
+    border-radius: 10px;
+    color:black;
+    position:fixed;
+    top:0px;
+    left:10px;
+    background:#7b818c;
+    padding:20px;
+    width:760px;
+    height:20px;
+    z-index: 2;
+}
+.score{
+    border-radius: 10px;
+    color:black;
+    position:fixed;
+    top:0px;
+    right:10px;
+    background:#7b818c;
+    padding:20px;
+    width:50px;
+    height:20px;
+    z-index: 2;
+}
+
+#ammo0{
+    border-radius: 10px;
+    color:black;
+    position:fixed;
+    top:100px;
+    left:1px;
+    background:#7b818c;
+    padding:20px;
+    width:20px;
+    height:20px;
+    z-index: 2;
+}
+
+#ammo0_selected{
+    border-radius: 10px;
+    color:black;
+    position:fixed;
+    top:100px;
+    left:1px;
+    background:#d5dae2;
+    padding:20px;
+    width:20px;
+    height:20px;
+    z-index: 2;
+}
+
+#ammo1{
+    border-radius: 10px;
+    color:black;
+    position:fixed;
+    top:180px;
+    left:1px;
+    background:#7b818c;
+    padding:20px;
+    width:20px;
+    height:20px;
+    z-index: 2;
+}
+
+#ammo1_selected{
+    border-radius: 10px;
+    color:black;
+    position:fixed;
+    top:180px;
+    left:1px;
+    background:#d5dae2;
+    padding:20px;
+    width:20px;
+    height:20px;
+    z-index: 2;
+}
