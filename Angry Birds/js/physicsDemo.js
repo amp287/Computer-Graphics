@@ -2,7 +2,7 @@
 	var scene;
 	var overview_camera;
     var current_camera;
-	var spotLight;
+	var light;
 	
 	<!-- add objects in the scope so all methods can access -->
 	var groundPlane;
@@ -127,13 +127,12 @@
 	
 	function addSpotLight()
 	{
-        spotLight = new THREE.SpotLight( 0xffffff );
-        spotLight.position.set( 0, 0, 200 );
-        spotLight.shadowCameraNear = 10;
-        spotLight.shadowCameraFar = 1000;
-        spotLight.castShadow = true;
-		spotLight.intensity = 3;
-        scene.add(spotLight);
+        light = new THREE.DirectionalLight( 0xffffff, 0.5 );
+        light.position.set( 0, 0, 200 );
+        light.shadowCameraNear = 10;
+        light.shadowCameraFar = 1000;
+        light.castShadow = true;
+        scene.add(light);
 	}
 
 	<!-- 4. Ground plane -->

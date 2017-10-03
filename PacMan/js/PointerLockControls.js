@@ -2,7 +2,7 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE.PointerLockControls = function ( camera ) {
+THREE.PointerLockControls = function ( camera, player ) {
 
 	var scope = this;
 
@@ -10,10 +10,14 @@ THREE.PointerLockControls = function ( camera ) {
 
 	var pitchObject = new THREE.Object3D();
 	pitchObject.add( camera );
-
+    pitchObject.add(player);
+    
 	var yawObject = new THREE.Object3D();
 	yawObject.position.y = 10;
 	yawObject.add( pitchObject );
+    
+    
+    pitchObject.rotateX((45 * Math.PI) / 180);
 
 	var PI_2 = Math.PI / 2;
 
@@ -24,10 +28,10 @@ THREE.PointerLockControls = function ( camera ) {
 		var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
 		var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-		yawObject.rotation.y -= movementX * 0.002;
-		pitchObject.rotation.x -= movementY * 0.002;
+		yawObject.rotation.z -= movementX * 0.002;
+		//pitchObject.rotation.x -= movementY * 0.002;
 
-		pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
+		//pitchObject.rotation.x = Math.max( PI_2, Math.min( (Math.PI, pitchObject.rotation.x ) );
 
 	};
 
@@ -54,16 +58,13 @@ THREE.PointerLockControls = function ( camera ) {
 		var direction = new THREE.Vector3( 0, 0, - 1 );
 		var rotation = new THREE.Euler( 0, 0, 0, "YXZ" );
 
-		return function( v ) {
+        rotation.set( pitchObject.rotation.x, yawObject.rotation.y, 0 );
 
-			rotation.set( pitchObject.rotation.x, yawObject.rotation.y, 0 );
+        var vector = new THREE.Vector3;
+        vector.copy( direction ).applyEuler( rotation );
 
-			v.copy( direction ).applyEuler( rotation );
+        return vector;
 
-			return v;
-
-		};
-
-	}();
+    };
 
 };

@@ -13,8 +13,8 @@
 
 #HUDView
 {
-	Width: 400px;
-	Height: 400px;
+	Width: 200px;
+	Height: 150px;
 	Position: Absolute;
 	Left: 20px;
 	Bottom: 20px;
