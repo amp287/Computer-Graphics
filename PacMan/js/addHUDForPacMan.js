@@ -11,6 +11,10 @@
 	var rw = 200, rh = 150;
 	var ca = 100, ar = 2;
 
+    var score = 0;
+
+    var ghost1;
+
     Physijs.scripts.worker = 'libs/physijs_worker.js';
     Physijs.scripts.ammo = 'ammo.js';
 
@@ -59,18 +63,29 @@
         //scene.add(controls.getObject(), player);
         //controls.getObject().position.set(0,0, 50);
         
+        ghost1 = new Ghosts(0, 0);
+        
 		// Call render
 		render();
 	}
 	
 	function setupPlayer()
 	{
-		var ballGeometry = new THREE.SphereGeometry(3);
+		var ballGeometry = new THREE.SphereGeometry(4);
 		var ballMaterial = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:'yellow'}), 0, 0);
 		player = new Physijs.BoxMesh( ballGeometry, ballMaterial );
         player.position.set(15, -48, 10);
+        player.name = "player";
 		scene.add( player );
-        player.setLinearVelocity(playerDir);
+        
+        player.addEventListener( 'collision', function( other_object, linear_velocity, angular_velocity )
+		{
+            if(other_object.name == "ball"){
+                score++;
+                scene.remove(other_object);
+            }
+
+		});
 	}
 	
 	function setupRenderers()
@@ -102,12 +117,12 @@
 		// HUD
 		//cameraHUD = new THREE.PerspectiveCamera(ca,ar,0.1,4000);
 		cameraHUD = new THREE.OrthographicCamera(
-    -1000,		// Left
-    1000,		// Right
-    1000,		// Top
-    -1000,		// Bottom
-    1,            			// Near 
-    1000 );
+                                                -1000,		// Left
+                                                1000,		// Right
+                                                1000,		// Top
+                                                -1000,		// Bottom
+                                                1,            			// Near 
+                                                1000 );
         
         cameraHUD.zoom = 6.5;
         cameraHUD.updateProjectionMatrix();
@@ -126,26 +141,14 @@
         
         velocity.copy(forward);
         
-        velocity.multiplyScalar(10000);
+        velocity.multiplyScalar(50);
         
         velocity.z = 0;
         
         if(Key.isDown(Key.W)) {
-            player.applyCentralForce(velocity);
-            //controls.getObject().translateX(direction.x * speed );
-            ///controls.getObject().translateY(direction.y * speed);
-            //controls.getObject().translateZ(direction.z * speed);
-            //console.log(controls.getObject().position);
-            //camera.position.add(direction);
-			//var deltaX = Math.sin(camera.rotation.y)*.2;
-			//var deltaZ = Math.cos(camera.rotation.y)*.2;
-			//camera.position.x -= deltaX;
-			//camera.position.z -= deltaZ;
+            player.setLinearVelocity(velocity);
 		} else if(Key.isDown(Key.S)) {
-			//var deltaX = Math.sin(camera.rotation.y)*.2;
-			//var deltaZ = Math.cos(camera.rotation.y)*.2;
-			//camera.position.x += deltaX;
-			//camera.position.z += deltaZ;
+
 		} else {
             var temp = player.getLinearVelocity();
             temp.x = 0;
@@ -154,35 +157,21 @@
            
         }
         
-        
 		if(Key.isDown(Key.A)) {
             var force = new THREE.Vector3(0, 0, 5);
-            //var newForce = player.matrix.multiplyVector3(force);
             player.setAngularVelocity(force)
-            //player.applyCentralImpulse(newForce);
-			//camera.rotation.y += 0.01;
 		} else if( Key.isDown( Key.D ) ) {
             var force = new THREE.Vector3(0, 0, -5);
-            
             player.setAngularVelocity(force)
 		} else {
            player.setAngularVelocity(new THREE.Vector3(0, 0, 0));  
         }
-
-
-		
-        //player.position.add(playerDir);
-        //camera.position.add(playerDir);
-        console.log(player.getLinearVelocity());
-        //player.applyCentralForce(playerDir);
-        //player.setLinearVelocity(playerDir);
-        //camera.position.x = 
-        
-		//player.position.x = camera.position.x;
-		//player.position.y = camera.position.y;
-		//player.position.z = camera.position.z;
         
         scene.simulate();
+        
+        updateBalls();
+        
+        ghost1.update();
         
 		// Request animation frame
 		requestAnimationFrame( render );
