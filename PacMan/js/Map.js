@@ -25,19 +25,19 @@ var map =
 var groundPlane;
 
 function generateMap(){
-        var material = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:"black"}), .95, 1.3 );
-		var geometry = new THREE.PlaneGeometry( 300, 300, 6 );
-		groundPlane = new Physijs.BoxMesh( geometry, material, 0 );
-		groundPlane.name = "GroundPlane";
-		
-		scene.add( groundPlane );
+    var material = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:"black"}), 1, 1.3 );
+    var geometry = new THREE.PlaneGeometry(300, 300, 6);
+    groundPlane = new Physijs.BoxMesh(geometry, material, 0);
+    groundPlane.name = "GroundPlane";
+
+    scene.add( groundPlane );
     
     var height = 15;
     var width = 15;
     var length = 20;
     
     geometry = new THREE.CubeGeometry(width, height, length);
-    material = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:"blue"}), .95, 1.3);
+    material = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:"blue"}), 1, 1.3);
     
     var cube = new Physijs.BoxMesh(geometry, material, 0);
     
