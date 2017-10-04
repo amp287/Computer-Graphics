@@ -15,6 +15,8 @@
 
     var ghost1;
 
+    var music = new Audio("music/pacman.mp3");
+
     Physijs.scripts.worker = 'libs/physijs_worker.js';
     Physijs.scripts.ammo = 'ammo.js';
 
@@ -33,6 +35,8 @@
         setupCameras();
         
         generateMap();
+        
+        music.play();
         
         var hemi = new THREE.HemisphereLight(0x2cdff7, 0xf4f7f7, 0.5);
         
@@ -173,6 +177,8 @@
         
         ghost1.update();
         
+        updateScore();
+        
 		// Request animation frame
 		requestAnimationFrame( render );
 		
@@ -195,6 +201,11 @@
 		}
 	}
 	
+
+    function updateScore(){
+        var element = document.getElementById("score");
+        element.innerHTML = "Score\n" + score;
+    }
 	
 	window.onload = init;
 

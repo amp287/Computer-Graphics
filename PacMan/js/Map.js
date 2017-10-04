@@ -34,6 +34,7 @@ function Ball(x, y){
     this.mesh.mass = 0;
     this.mesh.name = "ball";
     this.mesh.position.set(x, y, 5);
+    this.mesh._physijs.collision_flags = 4;
     scene.add(this.mesh);
 }
 

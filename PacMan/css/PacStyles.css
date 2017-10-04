@@ -71,3 +71,28 @@ body {
     cursor: pointer;
 
 }
+
+.menu{
+    border-radius: 10px;
+    color:black;
+    position:fixed;
+    top:0px;
+    left:10px;
+    background:#7b818c;
+    padding:20px;
+    width:760px;
+    height:20px;
+    z-index: 2;
+}
+.score{
+    border-radius: 10px;
+    color:black;
+    position:fixed;
+    top:0px;
+    right:20px;
+    background:#7b818c;
+    padding:20px;
+    width:70px;
+    height:20px;
+    z-index: 2;
+}
