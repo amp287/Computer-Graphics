@@ -15,6 +15,8 @@
 
     var ghost1;
 
+    var lose = false;
+
     var music = new Audio("music/pacman.mp3");
 
     Physijs.scripts.worker = 'libs/physijs_worker.js';
@@ -29,14 +31,14 @@
 		scene.setGravity(new THREE.Vector3( 0, 0, -30 ));
 
 		setupRenderers();
-
-		setupPlayer();
+        
+        setupPlayer();
         
         setupCameras();
         
         generateMap();
         
-        music.play();
+        //music.play();
         
         var hemi = new THREE.HemisphereLight(0x2cdff7, 0xf4f7f7, 0.5);
         
@@ -67,7 +69,7 @@
         //scene.add(controls.getObject(), player);
         //controls.getObject().position.set(0,0, 50);
         
-        ghost1 = new Ghosts(0, 0);
+        //ghost1 = new Ghosts(0, 0);
         
 		// Call render
 		render();
@@ -79,6 +81,7 @@
 		var ballMaterial = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:'yellow'}), 0, 0);
 		player = new Physijs.BoxMesh( ballGeometry, ballMaterial );
         player.position.set(15, -48, 10);
+        
         player.name = "player";
 		scene.add( player );
         
@@ -175,7 +178,11 @@
         
         updateBalls();
         
-        ghost1.update();
+        //ghost1.update();
+        
+        for(i = 0; i < enemies.length; i++){
+            enemies[i].update();
+        }
         
         updateScore();
         
