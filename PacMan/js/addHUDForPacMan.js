@@ -16,12 +16,14 @@
     var ghost1;
 
     var lose = false;
-
+    var boop = new Audio("music/blip.mp3");
     var music = new Audio("music/pacman.mp3");
+    var GameOver = document.getElementById("GameOver");
 
     Physijs.scripts.worker = 'libs/physijs_worker.js';
     Physijs.scripts.ammo = 'ammo.js';
-
+    
+    GameOver.style.display = "none";
 	
 	function init()
 	{   
@@ -38,7 +40,12 @@
         
         generateMap();
         
-        //music.play();
+        text();
+        
+        boop.playbackRate = 3;
+        boop.volume = 1;
+        music.play();
+        music.volume = .6;
         
         var hemi = new THREE.HemisphereLight(0x2cdff7, 0xf4f7f7, 0.5);
         
@@ -80,7 +87,7 @@
 		var ballGeometry = new THREE.SphereGeometry(4);
 		var ballMaterial = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:'yellow'}), 0, 0);
 		player = new Physijs.BoxMesh( ballGeometry, ballMaterial );
-        player.position.set(15, -48, 10);
+        player.position.set(15, -48, 6);
         
         player.name = "player";
 		scene.add( player );
@@ -89,6 +96,7 @@
 		{
             if(other_object.name == "ball"){
                 score++;
+                boop.play();
                 scene.remove(other_object);
             }
 
@@ -141,6 +149,15 @@
 	
 	function render()
 	{
+        if(lose){
+            GameOver.style.display = "block";
+            return;
+        }
+        if(score == 181){
+            document.getElementById("GOText").innerHTML = "WINNER WINNER CHICKEN DINNER!";
+            GameOver.style.display = "block";
+            return;
+        }
         //var direction = controls.getDirection();
         var velocity = new THREE.Vector3();
     
@@ -150,7 +167,7 @@
         
         velocity.multiplyScalar(50);
         
-        velocity.z = 0;
+        velocity.z = player.getLinearVelocity().z;
         
         if(Key.isDown(Key.W)) {
             player.setLinearVelocity(velocity);
@@ -172,6 +189,13 @@
             player.setAngularVelocity(force)
 		} else {
            player.setAngularVelocity(new THREE.Vector3(0, 0, 0));  
+        }
+        
+        if(Key.isDown(Key.SPACE)){
+            if(player.position.z < 5){
+                var velocity = player.getLinearVelocity();
+                player.setLinearVelocity(new THREE.Vector3(velocity.x, velocity.y, 30));
+            }
         }
         
         scene.simulate();
@@ -202,12 +226,34 @@
 		var i;
 		for( i=1; i<=4; i++ )
 		{
-			var name = "SpotLight"+i;
+			var name = "SpotLight";
 			var light = scene.getObjectByName( name );
 			light.intensity = value;
 		}
 	}
 	
+    function text(){
+        var text;
+        
+        var loader = new THREE.FontLoader();
+        loader.load("fonts/Impact_Regular.json", function(font){
+           var geometry = new THREE.TextGeometry( 'Austin Peace', {
+            font:font,
+			size: 2,
+			height: 0.4,
+			curveSegments: 10,
+			bevelEnabled: false
+            } );
+            console.log("TEXT!");
+            var scoreObjectMaterial = new THREE.MeshLambertMaterial({color:0xb6bbc4});
+            text = new THREE.Mesh( geometry, scoreObjectMaterial );
+
+            text.position.set(20, -35,10);
+            text.rotateX((90 * Math.PI) / 180);
+            text.rotateY((-90 * Math.PI) / 180);
+            scene.add(text);
+            });
+    }
 
     function updateScore(){
         var element = document.getElementById("score");

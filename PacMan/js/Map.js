@@ -7,8 +7,8 @@ var map =
     1, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 1, 1, 
     1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 
     1, 0, 0, 1, 2, 1, 2, 2, 2, 0, 2, 2, 2, 1, 2, 1, 0, 0, 1, 1, 
-    1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 
-    1, 2, 2, 2, 2, 2, 2, 1, 0, 3, 0, 1, 2, 2, 2, 2, 2, 2, 1, 1, 
+    1, 1, 1, 1, 2, 1, 2, 1, 1, 3, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 
+    1, 2, 2, 2, 2, 2, 2, 1, 3, 3, 3, 1, 2, 2, 2, 2, 2, 2, 1, 1, 
     1, 1, 1, 1, 2, 1, 2, 1, 1, 0, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 
     1, 0, 0, 1, 2, 1, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1, 0, 0, 1, 1, 
     1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 
@@ -55,19 +55,30 @@ function updateBalls(){
 }
 
 function generateMap(){
-        var material = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:"black"}), .95, 1.3 );
-		var geometry = new THREE.PlaneGeometry(300, 300, 6);
-		groundPlane = new Physijs.BoxMesh(geometry, material, 0);
-		groundPlane.name = "GroundPlane";
-		
-		scene.add( groundPlane );
+    var texture = THREE.ImageUtils.loadTexture("texture/texture.jpg");
+    var texture2 = THREE.ImageUtils.loadTexture("texture/texture2.jpg");
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    
+    texture.repeat.set(4, 4);
+    texture2.wrapS = THREE.RepeatWrapping;
+    texture2.wrapT = THREE.RepeatWrapping;
+    
+    texture2.repeat.set(4, 4);
+    
+    var material = new Physijs.createMaterial(new THREE.MeshLambertMaterial({map:texture}), .95, 1.3 );
+    var geometry = new THREE.PlaneGeometry(300, 300, 6);
+    groundPlane = new Physijs.BoxMesh(geometry, material, 0);
+    groundPlane.name = "GroundPlane";
+
+    scene.add( groundPlane );
     
     var height = 15;
     var width = 15;
     var length = 20;
     
     geometry = new THREE.CubeGeometry(width, height, length);
-    material = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:"blue"}), .95, 1.3);
+    material = new Physijs.createMaterial(new THREE.MeshLambertMaterial({map:texture2}), .95, 1.3);
     
     var cube = new Physijs.BoxMesh(geometry, material, 0);
     
@@ -96,19 +107,13 @@ function generateMap(){
             scene.add(cube);
         } else if(map[i] == 2){
             ball = new Ball(leftTop.x - (15 * (i % 20)), leftTop.y + 15 * level);
-            //ball.mesh.position.set(leftTop.x, leftTop.y, leftTop.z);
-           // ball.mesh.position.x -= (15 * (i % 20));
-           // ball.mesh.position.y += 15 * level;
-           // scene.add(ball.mesh);
             balls.push(ball);
         } else if(map[i] == 3){
             ghost = new Ghosts(leftTop.x - (15 * (i % 20)), leftTop.y + 15 * level);
             enemies.push(ghost);
         }
-        else if(map[i] == 4){
-            ;//player.position.set(leftTop.x - (15 * (i % 20)), leftTop.y + 15 * level, 100);
-        }
     }
+    console.log("BALLS:" + balls.length);
 }
 
 function getCell(x, y){
@@ -117,14 +122,11 @@ function getCell(x, y){
     var celly = 0;
     var posx = leftTop.x;
     var posy = leftTop.y;
-    console.log("Pos: " + x + " " + y);
     
     while(cellx < 20){
         var temp;
         
         temp = Math.abs((posx - (cellx * 15)) - x);
-        
-        console.log("[X]: temp:" + temp + " cellx:" + cellx + " posx:" + posx + " value: " + (cellx * 15));
         
         if(temp <= 7.5)
             break;
@@ -133,8 +135,6 @@ function getCell(x, y){
     while(celly < 21){
         var temp;
         temp = Math.abs((posy +(celly * 15)) - y);
-        
-        console.log("[Y]: temp:" + temp + " cellx:" + celly + " posy:" + posy + " value: " + (celly * 15));
         
         if(temp <= 7.5)
             break;

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <link rel="stylesheet" href="css/PacStyles.css">
+    </head>
+    <body>
+        <div id="Main">
+            <div id="MainView"></div>
+            <div id="HUDView"></div>
+            <p class="score" id="score">Score=0</p>
+            <div id="GameOver">
+                <p id="GOText">GAMEOVER</P>
+            </div>
+            <div id="instr">
+                <p>W-Forward S-left D-Right Space-Jump</p>
+            </div>
+        </div>
+        <script src="/libs/three.js"></script>
+        <script src="libs/physi.js"></script>
+        <script src="libs/keyboard.js"></script>
+        <script src="libs/pathfinding-browser.min.js"></script>
+        <script src="js/Map.js"></script>
+        <script src="js/Ghosts.js"></script>
+		<script src="js/PointerLockControls.js"></script>
+        <script src="js/addHUDForPacMan.js"></script>
+    </body>
+</html>
