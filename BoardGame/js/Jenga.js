@@ -66,16 +66,17 @@
         var plane = new Physijs.PlaneMesh(geom, mat, .95, 0);
         plane.position.set(0, 0, 0);
         plane.mass = 0;
+        plane.name = "Ground";
         scene.add(plane);
     }
     
-    function createTower(){
-        var geom = new THREE.BoxGeometry(1, 3, 1);
-        var mat = new Physijs.createMaterial(new THREE.MeshStandardMaterial({color:"tan"}), .95, 0);
-        
+    function createTower(){        
         for(i = 0; i < 10; i++){
             for(j = 0; j < 3; j++){
+                var geom = new THREE.BoxGeometry(1, 3, 1);
+                var mat = new Physijs.createMaterial(new THREE.MeshStandardMaterial({color:"tan"}), .95, 0);
                 var mesh = new Physijs.BoxMesh(geom, mat);
+                mesh.name = "Block";
                 if(i % 2){
                     mesh.position.set(-1, 0, .6);
                     mesh.position.x += (j * 1);
@@ -96,15 +97,39 @@
         var zAxis = new THREE.Vector3(0, 0, 1);
         scene.simulate();
         if(Key.isDown(Key.A)){
-            pivot.rotateOnAxis(zAxis, -0.01);
+            pivot.rotateOnAxis(zAxis, -0.05);
         } else if(Key.isDown(Key.D)){
-            pivot.rotateOnAxis(zAxis, 0.01);
+            pivot.rotateOnAxis(zAxis, 0.05);
         }
 		// Request animation frame
 		requestAnimationFrame( render );
 		
 		renderer.render( scene, camera );
 	}
+
+    document.addEventListener('click', onDocumentMouseClick, false);
+
+    function onDocumentMouseClick(event) {
+        var mouse = new THREE.Vector2();
+        event.preventDefault();
+
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        //var vector = new THREE.Vector3( x, y, 0.5 );
+
+        var raycaster = new THREE.Raycaster();
+
+        raycaster.setFromCamera(mouse, camera);
+        
+        var intersects = raycaster.intersectObjects( scene.children );
+        console.log(intersects);
+        if (intersects.length > 0)
+        {
+            intersects[0].object.material.color.set( 0xff0000 );
+            if(intersects.name == "Block")
+                console.log("Block");
+        }
+    }
 	
 	window.onload = init;
 
