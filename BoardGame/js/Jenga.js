@@ -3,6 +3,8 @@
 	var camera;
     var angle = 0;
     var pivot;
+    var selected = null;
+
     Physijs.scripts.worker = 'libs/physijs_worker.js';
     Physijs.scripts.ammo = 'ammo.js';
     
@@ -74,7 +76,7 @@
         for(i = 0; i < 10; i++){
             for(j = 0; j < 3; j++){
                 var geom = new THREE.BoxGeometry(1, 3, 1);
-                var mat = new Physijs.createMaterial(new THREE.MeshStandardMaterial({color:"tan"}), .95, 0);
+                var mat = new Physijs.createMaterial(new THREE.MeshStandardMaterial({color:"tan"}), .3, 0);
                 var mesh = new Physijs.BoxMesh(geom, mat);
                 mesh.name = "Block";
                 if(i % 2){
@@ -107,9 +109,9 @@
 		renderer.render( scene, camera );
 	}
 
-    document.addEventListener('click', onDocumentMouseClick, false);
+    document.addEventListener('mousedown', onMouseDown, false);
 
-    function onDocumentMouseClick(event) {
+    function onMouseDown(event) {
         var mouse = new THREE.Vector2();
         event.preventDefault();
 
@@ -120,15 +122,46 @@
         var raycaster = new THREE.Raycaster();
 
         raycaster.setFromCamera(mouse, camera);
-        
+
         var intersects = raycaster.intersectObjects( scene.children );
         console.log(intersects);
-        if (intersects.length > 0)
-        {
-            intersects[0].object.material.color.set( 0xff0000 );
-            if(intersects.name == "Block")
-                console.log("Block");
+        if (intersects.length > 0){
+            if(intersects[0].object.name == "Block"){
+                intersects[0].object.material.color.set( 0xff0000 );
+                selected = intersects[0].object;
+            }
         }
+    }
+    
+    document.addEventListener('mousemove', onMouseMove, false);
+    
+    function onMouseMove(event){
+        if(selected == null)
+            return;
+        var mouse = new THREE.Vector3();
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = (event.clientY / window.innerHeight) * 2 - 1;
+        mouse.z = selected.position.z;
+        
+        if(mouse.equals(selected.position) || selected.getLinearVelocity() > 0){
+            return;
+        }
+        var vect = new THREE.Vector3();
+        vect.subVectors(selected.position, mouse);
+        vect.multiplyScalar(2);
+        vect.z = 0;
+        //selected.setLinearFactor(selected.position.sub(mouse).multiplyScalar(1));
+        selected.setLinearVelocity(vect);
+    }
+
+    document.addEventListener('mouseup', onMouseUp, false);
+    
+    function onMouseUp(event){
+        if(selected == null)
+            return;
+        selected.material.color.set('tan');
+        selected = null;
+        console.log("UP");
     }
 	
 	window.onload = init;
