@@ -2,30 +2,85 @@
 
 <head>
 <script src="libs/three.js"></script>
-<script type="text/x-glsl" id="fragmentSimple">
-/**
- * Set the colour to a lovely pink.
- * Note that the color is a 4D Float
- * Vector, R,G,B and A and each part
- * runs from 0.0 to 1.0
- */
-void main() {
-  gl_FragColor = vec4(1.0,  // R
-                      0.0,  // G
-                      1.0,  // B
-                      1.0); // A
+<script type="text/x-glsl" id="fragmentSquareAnimated">
+varying vec2 uVu;
+uniform float time;
+void main()
+{
+	vec2 st = uVu;
+	vec3 color = vec3( 0.0 );
+	
+	st *= sin(time * 0.5) * 5.0;
+	st = fract(st);
+    st.x += 40.0 * sin(time) * 0.05;
+    st.y += 70.0 * cos(time) * 0.05;
+	color = vec3(st, 1.0);
+	
+    gl_FragColor = vec4( color, 1.0 );
+}
+</script>
+
+<script type="text/x-glsl" id="fragmentSquare">
+varying vec2 uVu;
+
+float make_box(vec2 _st, vec2 _size, float _smoothEdges){
+    _size = vec2(0.5)-_size*0.5;
+    vec2 uv = smoothstep(_size,_size,_st);
+    return uv.x*uv.y;
+}
+
+void main(void){
+    vec2 st = uVu;
+    vec3 color = vec3(0.0);
+    
+    st *= 2.0;
+    st = fract(st);
+
+    color = vec3(make_box(st,vec2(0.4),0.01));
+    color *= vec3(0.5, 0.2, 0.4);
+    //color = vec3(st, 0.0);
+
+    gl_FragColor = vec4(color,1.0);
+}
+</script>
+
+<script type="text/x-glsl" id="fragmentSphereAnimated">
+varying vec2 uVu;
+uniform float time;
+void main()
+{
+    vec2 st = uVu;
+    vec3 color = vec3(0.0);
+    
+    float rings = step(0.9, abs(sin(st.y * 20.0 * time * 0.05)));
+    
+    color = vec3(rings) * vec3(sin(time * 0.05 * 2.0), sin(time * 0.05 * 7.0), sin(time * 0.05 * 88.0));
+    
+    gl_FragColor = vec4( color, 1.0 );
+}
+</script>    
+    
+<script type="text/x-glsl" id="fragmentSphere">
+varying vec2 uVu;
+uniform float time;
+void main()
+{
+    vec2 st = uVu;
+    vec3 color = vec3(0.0);
+    
+    float rings = step(0.9, abs(sin(st.y * 20.0)));
+    
+    color = vec3(rings) * vec3(0.1, 0.4, 0.8);
+    
+    gl_FragColor = vec4( color, 1.0 );
 }
 </script>
     
 <script type="text/x-glsl" id="vertexSimple">
-/**
- * Multiply each vertex by the
- * model-view matrix and the
- * projection matrix (both provided
- * by Three.js) to get a final
- * vertex position
- */
+varying vec2 uVu;
 void main() {
+  uVu = uv;
+
   gl_Position = projectionMatrix *
                 modelViewMatrix *
                 vec4(position,1.0);
@@ -37,7 +92,7 @@ void main() {
 <script src="js/customShaderAllowingColorSet.js"></script>
 <script src="js/customShaderWithLight.js"></script>
 <script src="js/customShader.js"></script>
-<script src="js/introToShadersDemo.js"></script>
+<script src="js/Shader.js"></script>
 
 </body>
 
