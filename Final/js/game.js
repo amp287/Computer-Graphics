@@ -47,7 +47,7 @@ function init(){
 
 function render(){
     requestAnimationFrame( render );
-    
+    scene.simulate();
     /*if(Key.isDown(Key.A)) {
             //var force = new THREE.Vector3(0, 0, 5);
             //player.setAngularVelocity(force)
@@ -60,6 +60,10 @@ function render(){
            //player.setAngularVelocity(new THREE.Vector3(0, 0, 0));  
         }*/
     player.update();
+    
+    for(i = 0; i < block_list.length; i++){
+        block_list[i].update();
+    }
 
     scene.simulate();
     

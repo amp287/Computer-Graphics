@@ -56,9 +56,9 @@ Player.prototype.update = function(){
        this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));  
     }
 
-    if(Key.isDown(Key.LEFTARROW)){
+    if(Key.isDown(Key.Q)){
         this.obj.rotateZ((2 * Math.PI) / 180);
-    } else if(Key.isDown(Key.RIGHTARROW)){
+    } else if(Key.isDown(Key.E)){
         this.obj.rotateZ((-2 * Math.PI) / 180);
     }
 
@@ -66,7 +66,6 @@ Player.prototype.update = function(){
          var velocity = this.mesh.getLinearVelocity();
         this.mesh.setLinearVelocity(new THREE.Vector3(velocity.x, velocity.y, 15));
     }
-    console.log(check_jump);
     this.obj.position.x = this.mesh.position.x;
     this.obj.position.y = this.mesh.position.y;
     this.obj.position.z = this.mesh.position.z;

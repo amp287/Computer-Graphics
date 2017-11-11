@@ -15,12 +15,27 @@ function Block(x, y, z, light){
     this.mesh.position.set(x, y, z);
 }
 
-function moving_block(x, y, z, light, dir){
+function MovingBlock(x, y, z, light, dir_vector){
     Block.call(this, x, y, z, light);
-    this.direction = dir;
+    this.direction = dir_vector;
+    this.start = new THREE.Vector3(x, y, z);
+    this.mesh.mass = 1;
+    this.start_rotation = this.mesh.rotation;
+    this.timer = new THREE.Clock();
 }
 
-
-moving_block.prototype.update = function(){
+Block.prototype.update = function(){
     
+}
+
+MovingBlock.prototype.update = function(){
+    
+    if(this.timer.getElapsedTime() > 6){
+        this.direction.multiplyScalar(-1);
+        this.timer.stop();
+        this.timer.start();
+    }
+
+    this.mesh.setLinearVelocity(this.direction);
+
 }
