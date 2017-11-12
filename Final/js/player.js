@@ -19,7 +19,7 @@ function Player(x, y, z){
 }
 
 Player.prototype.update = function(){
-        
+    var speed = 10;
     var velocity = new THREE.Vector3();
     var check_jump = new THREE.Vector3();
 
@@ -27,9 +27,9 @@ Player.prototype.update = function(){
     
     this.fwd_cam.getWorldDirection(velocity);
     if(Math.abs(check_jump.z) < .1)
-        velocity.multiplyScalar(12);
+        velocity.multiplyScalar(speed);
     else
-        velocity.multiplyScalar(5);
+        velocity.multiplyScalar(speed / 2);
 
     velocity.z = this.mesh.getLinearVelocity().z;
 
@@ -64,7 +64,7 @@ Player.prototype.update = function(){
 
     if(Key.isDown(Key.SPACE) && Math.abs(check_jump.z) < .1){
          var velocity = this.mesh.getLinearVelocity();
-        this.mesh.setLinearVelocity(new THREE.Vector3(velocity.x, velocity.y, 15));
+        this.mesh.setLinearVelocity(new THREE.Vector3(velocity.x, velocity.y, 9));
     }
     this.obj.position.x = this.mesh.position.x;
     this.obj.position.y = this.mesh.position.y;
