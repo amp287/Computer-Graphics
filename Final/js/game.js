@@ -4,11 +4,13 @@ var scene;
 var ambient;
 var player;
 var light;
+var clock;
 
 Physijs.scripts.worker = 'libs/physijs_worker.js';
 Physijs.scripts.ammo = 'ammo.js';
 
 function init(){
+    var player_mesh;
     camera = new THREE.PerspectiveCamera( 75, (window.innerWidth / window.innerHeight) * .97, 1, 1000 );
     camera.rotateX((90 * Math.PI) / 180);
     //acamera.position.set(25, -95, 10);
@@ -40,26 +42,36 @@ function init(){
     
     player = new Player(25, -95, 10);
     
-
-    render();
+    var loader = new THREE.JSONLoader();
     
+    loader.load("models/Model.json", function(geometry, materials){
+        materials.forEach(function(material){
+            material.skinning = true;
+        });
+        player.skin = new THREE.SkinnedMesh(geometry, new THREE.MeshFaceMaterial(materials));
+        player.anim_mixer = new THREE.AnimationMixer(player.skin);
+        player.clips = player.skin.animations;
+        player.mesh.add(player.skin);
+        player.skin.rotateX((90 * Math.PI) / 180);
+        player.skin.rotateY((180 * Math.PI) / 180);
+        player.skin.scale.set(1.5, 1.5, 1.5);
+        player.skin.position.z -= 1;
+        player.skin.visible = true;
+        //player.actions[0].play();
+        player.anim_mixer.clipAction('Idle').play();
+        //player.anim_mixer.clipAction('Run').play();
+        clock = new THREE.Clock();
+        render(); 
+    });
 }
 
 function render(){
     requestAnimationFrame( render );
     scene.simulate();
-    /*if(Key.isDown(Key.A)) {
-            //var force = new THREE.Vector3(0, 0, 5);
-            //player.setAngularVelocity(force)
-            camera.rotateY((1 * Math.PI) / 180);
-		} else if( Key.isDown( Key.D ) ) {
-            //var force = new THREE.Vector3(0, 0, -5);
-            //player.setAngularVelocity(force)
-            camera.rotateY((-1 * Math.PI) / 180);
-		} else {
-           //player.setAngularVelocity(new THREE.Vector3(0, 0, 0));  
-        }*/
-    player.update();
+
+    if(player.update() != 0){
+        
+    }
     
     for(i = 0; i < block_list.length; i++){
         block_list[i].update();
