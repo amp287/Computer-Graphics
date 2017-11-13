@@ -34,7 +34,7 @@ function init(){
     var ambient = new THREE.AmbientLight( 0xffffff );
     scene.add( ambient );
     
-    light = new THREE.DirectionalLight(0x000000, 1);
+    light = new THREE.DirectionalLight(0x000000, .1);
     light.position.set(-100, 100, 100);
     scene.add(light);
     
@@ -56,8 +56,6 @@ function init(){
         player.skin.rotateY((180 * Math.PI) / 180);
         player.skin.scale.set(1.5, 1.5, 1.5);
         player.skin.position.z -= 1;
-        player.skin.visible = true;
-        //player.actions[0].play();
         player.anim_mixer.clipAction('Idle').play();
         //player.anim_mixer.clipAction('Run').play();
         clock = new THREE.Clock();

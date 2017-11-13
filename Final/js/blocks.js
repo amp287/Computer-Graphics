@@ -22,7 +22,6 @@ function MovingBlock(x, y, z, light, dir_vector, color, time, speed){
     this.direction = dir_vector;
     this.start = new THREE.Vector3(x, y, z);
     this.mesh.mass = 1;
-    this.start_rotation = this.mesh.rotation;
     this.timer = new THREE.Clock();
     this.time = time;
     this.speed = speed;
@@ -39,7 +38,7 @@ Block.prototype.update = function(){
 }
 
 MovingBlock.prototype.update = function(){
-    var velocity = new THREE.Vector3(this.direction.z, this.direction.y, this.direction.z);
+    var velocity = new THREE.Vector3(this.direction.x, this.direction.y, this.direction.z);
     if(this.timer.getElapsedTime() > this.time){
         this.direction.multiplyScalar(-1);
         this.timer.stop();

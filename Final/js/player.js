@@ -2,7 +2,7 @@ var spawn_location;
 
 function Player(x, y, z){
     this.geometry = new THREE.BoxGeometry(.5, .5, 2);
-    this.material = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:'yellow'}), 1, 1);
+    this.material = new Physijs.createMaterial(new THREE.MeshLambertMaterial({color:'yellow'}), 1, 0);
     this.mesh = new Physijs.BoxMesh( this.geometry, this.material );
     this.mesh.material.visible = false;
     this.fwd_cam =  new THREE.PerspectiveCamera( 75, 1, 1, 1000 );
@@ -17,6 +17,7 @@ function Player(x, y, z){
     this.clips = null;
     this.currentAction = "Idle";
     this.hearts = 3;
+    this.mesh.name = "Player";
     camera.position.set(0, -5, 5);
     camera.rotateX((-25 * Math.PI) / 180);
     spawn_location = new THREE.Vector3(x, y, z);
@@ -86,9 +87,9 @@ Player.prototype.update = function(){
        this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));  
     }
 
-    if(Key.isDown(Key.Q)){
+    if(Key.isDown(Key.E)){
         this.obj.rotateZ((3 * Math.PI) / 180);
-    } else if(Key.isDown(Key.E)){
+    } else if(Key.isDown(Key.Q)){
         this.obj.rotateZ((-3 * Math.PI) / 180);
     }
 
@@ -97,6 +98,10 @@ Player.prototype.update = function(){
         this.mesh.setLinearVelocity(new THREE.Vector3(velocity.x, velocity.y, 9));
         this.anim_mixer.clipAction('Jump').play();
         this.activeAction = "Jump";
+    }
+    
+    if(Key.isDown(Key.C)){
+        this.obj.rotation = this.fwd_cam.rotation;
     }
     
     this.obj.position.x = this.mesh.position.x;
