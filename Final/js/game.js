@@ -5,6 +5,8 @@ var ambient;
 var player;
 var light;
 var clock;
+var music = new Audio("sounds/Gorgeous-Go-Round - Kirby Planet Robobot.mp3");
+var currentCam;
 
 Physijs.scripts.worker = 'libs/physijs_worker.js';
 Physijs.scripts.ammo = 'ammo.js';
@@ -60,6 +62,9 @@ function init(){
         //player.anim_mixer.clipAction('Run').play();
         clock = new THREE.Clock();
         render(); 
+        music.play();
+        music.loop = true;
+        currentCam = camera;
     });
 }
 
@@ -71,14 +76,20 @@ function render(){
         
     }
     
-    for(i = 0; i < block_list.length; i++){
+    for(i = 0; i < block_list.length; i++)
         block_list[i].update();
-    }
+    
+    for(i = 0; i < enemy_list.length; i++)
+        enemy_list[i].update();
 
     scene.simulate();
     
+    if(Key.isDown(Key.F)){
+        currentCam = enemy_list[0].fwd_cam;
+    }
+    
     renderer.setViewport( 0, 0, window.innerWidth * .98, window.innerHeight * .97);
-    renderer.render( scene, camera );
+    renderer.render( scene, currentCam );
 }
 
 window.onload = init;

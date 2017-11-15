@@ -1,4 +1,5 @@
 var block_list = [];
+var enemy_list = [];
 var map;
 function generateMap(light){
     map = new Map();
@@ -88,6 +89,8 @@ function generateMap(light){
         }
 
     }
+    
+    gen_enemies();
 }
     
 function gen_enemies(){
@@ -108,11 +111,14 @@ function gen_enemies(){
             y = leftTop.y;
             x += (block_size * (i % map.width));
             y -= block_size * level;
-            z = leftTop.z;
+            z = leftTop.z + 5;
         
         if(tokens[0] == "o"){
          
-        } else if(tokens[0] == "<-"){
+        } else if(tokens[0] == "b"){
+            enemy = new Ball(x, y, z);
+            scene.add(enemy.mesh);
+            enemy_list.push(enemy);
          
         } else if(tokens[0] == '->'){
            
@@ -120,10 +126,6 @@ function gen_enemies(){
             
         } else if(tokens[0] == "+"){
             
-        }
-        
-        if(cube != null){
-
         }
     }
 }

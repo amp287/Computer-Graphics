@@ -1,4 +1,5 @@
 var spawn_location;
+var jump_sound = new Audio("sounds/jump.mp3");
 
 function Player(x, y, z){
     this.geometry = new THREE.BoxGeometry(.5, .5, 2);
@@ -98,6 +99,8 @@ Player.prototype.update = function(){
         this.mesh.setLinearVelocity(new THREE.Vector3(velocity.x, velocity.y, 9));
         this.anim_mixer.clipAction('Jump').play();
         this.activeAction = "Jump";
+        jump_sound.play();
+        jump_sound.volume = .6;
     }
     
     if(Key.isDown(Key.C)){
@@ -134,6 +137,11 @@ Player.prototype.fadeAct = function(name){
 
     from.crossFadeTo(to, 0.3);
     this.activeAction = name;
+}
+
+Player.prototype.attacked = function(){
+    this.hearts--;
+    removeHeart();
 }
 
 function stopAnims(){
