@@ -7,6 +7,10 @@ var light;
 var clock;
 var music = new Audio("sounds/Gorgeous-Go-Round - Kirby Planet Robobot.mp3");
 var currentCam;
+var loaded = false;
+var loaded_done = false;
+var winning_flag = false;
+var lose_flag = false;
 
 Physijs.scripts.worker = 'libs/physijs_worker.js';
 Physijs.scripts.ammo = 'ammo.js';
@@ -46,6 +50,15 @@ function init(){
     
     var loader = new THREE.JSONLoader();
     
+    loader.load("models/enemy.json", function(geometry, materials){
+        materials.forEach(function(material){
+            material.skinning = false;
+        });
+        enemy_mesh = new THREE.SkinnedMesh(geometry, new THREE.MeshFaceMaterial(materials));
+        enemy_mesh.scale.set(0.5, 0.5, 0.5);
+        loaded = true;
+    });
+    
     loader.load("models/Model.json", function(geometry, materials){
         materials.forEach(function(material){
             material.skinning = true;
@@ -70,10 +83,27 @@ function init(){
 
 function render(){
     requestAnimationFrame( render );
+    if(!loaded_done)
+        if(!loaded){
+            return;
+        } else {
+            enemy_init();
+            loaded_done = true;
+        }
+    
+    if(winning_flag){
+        document.getElementById("GOText").innerHTML = "Winner!";
+        document.getElementById("GameOver").style.display = "block";
+
+    }
+    if(lose_flag){
+        document.getElementById("GameOver").style.display = "block";
+    }
+    
     scene.simulate();
 
     if(player.update() != 0){
-        
+        document.getElementById("GameOver").style.display = "block";
     }
     
     for(i = 0; i < block_list.length; i++)
@@ -84,12 +114,8 @@ function render(){
 
     scene.simulate();
     
-    if(Key.isDown(Key.F)){
-        currentCam = enemy_list[0].fwd_cam;
-    }
-    
     renderer.setViewport( 0, 0, window.innerWidth * .98, window.innerHeight * .97);
-    renderer.render( scene, currentCam );
+    renderer.render( scene, camera );
 }
 
 window.onload = init;

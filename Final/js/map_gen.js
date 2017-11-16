@@ -117,10 +117,11 @@ function gen_enemies(){
          
         } else if(tokens[0] == "b"){
             enemy = new Ball(x, y, z);
-            scene.add(enemy.mesh);
+            //scene.add(enemy.mesh);
             enemy_list.push(enemy);
          
-        } else if(tokens[0] == '->'){
+        } else if(tokens[0] == 'x'){
+            var winning = new  WinningSphere(x, y, z - 3);
            
         } else if(tokens[0] == '^'){
             

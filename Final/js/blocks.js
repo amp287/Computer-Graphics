@@ -46,3 +46,20 @@ MovingBlock.prototype.update = function(){
     }
     this.mesh.setLinearVelocity(velocity.multiplyScalar(this.speed));
 }
+
+function WinningSphere(x, y, z){
+    var geom = new THREE.SphereGeometry(1, 8, 8);
+    var mat = new Physijs.createMaterial(new THREE.MeshBasicMaterial({color:"yellow"}), 0, 0);
+    this.mesh = new Physijs.SphereMesh(geom, mat);
+    this.mesh.position.set(x, y, z);
+    scene.add(this.mesh);
+    this.mesh.setLinearFactor(new THREE.Vector3(0,0,0));
+    this.mesh.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+    // `this` has collided with `other_object` with an impact speed of `relative_velocity` and a rotational force of `relative_rotation` and at normal `contact_normal`
+        if(other_object.name == "player"){
+            winning_flag = true;
+            console.log("HELLO>?");
+        } 
+    });
+    //this.mesh.
+}
